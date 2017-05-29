@@ -1,0 +1,11 @@
+forward 1.0
+turn 45 left
+forward 0.5
+turn 90 right
+beep
+spin left
+forward .375
+ditty
+forward 2.0
+song
+spin right
