@@ -1,0 +1,90 @@
+import java.util.Scanner;
+
+public class CaeserCipher {
+	
+	public static void main (String [] args) {
+		String firstQuest;
+		String secondQuest;
+		String thirdQuest;
+		String expandedStr;
+		
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.println("This program encrpyts and decrpts messages using the Vigenere Cipher.");
+		System.out.print("Would you like to encode or decode a message? ");
+		
+		firstQuest = scan.nextLine();
+		
+		if (firstQuest.equals("encode")){
+			System.out.print("Enter the string to encode: ");	
+			secondQuest = scan.nextLine();
+			if (IsLowercase(secondQuest)) {
+				System.out.print("Enter the key: ");
+				thirdQuest = scan.nextLine();
+				if (IsLowercase(thirdQuest)) {
+					expandedStr = ExpandString(thirdQuest, secondQuest.length());
+					Cipher(secondQuest, expandedStr, true);
+				}
+			}
+		}else if (firstQuest.equals("decode")) {
+			System.out.print("Enter the string to decode: ");
+			secondQuest = scan.nextLine();
+			if (IsLowercase(secondQuest)) {
+				System.out.print("Enter the key: ");
+				thirdQuest = scan.nextLine();
+				if (IsLowercase(thirdQuest)) {
+					expandedStr = ExpandString(thirdQuest, secondQuest.length());
+				    Cipher(secondQuest, expandedStr, false);
+				}
+			}
+		}else {
+			System.out.println("Valid options are \"encode\" or \"decode\"");
+		}
+		scan.close();
+	}
+	
+	public static String ExpandString(String str, int length) {
+		String expandStr = "";
+		if (length <= str.length()) {
+			return str.substring(0, length);
+		}
+		for(int i = 0; i < (length/str.length())-1; i++) {
+			str = str.concat(str);
+		}
+		expandStr = str.concat(str.substring(0, length%str.length()));	
+		return expandStr;
+	}
+	
+	public static void Cipher(String message, String expandedStr, boolean QuestBoolean) {
+		char[] changedArray = new char[message.length()];
+			for(int j = 0; j < message.length(); j++) {
+				changedArray[j] = (char) AsciiValue(message, expandedStr, j, QuestBoolean);
+			}
+			String str = new String(changedArray);
+			System.out.println(str);
+	}
+	
+	public static int AsciiValue(String message, String expandedStr, int stringLen, boolean QuestBool) {
+		if (QuestBool) {
+			return mod((message.charAt(stringLen)+expandedStr.charAt(stringLen)-2*'a'), 26)+'a';
+		}else {
+			return mod(message.charAt(stringLen)-(expandedStr.charAt(stringLen)), 26)+'a';
+		}
+	}
+	
+	public static boolean IsLowercase(String message) {
+		for(int i = 0; i< message.length(); i++) {
+			int ascii = message.charAt(i);
+			if ((ascii >= 0 && ascii < 96) || ascii > 123) {
+				System.out.println("The string must consist only of lowercase characters");
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static int mod(int first, int second) {
+		int remainder = first % second;
+		return remainder < 0 ? remainder + second: remainder;
+	}
+}
