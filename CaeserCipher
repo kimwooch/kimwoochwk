@@ -1,0 +1,70 @@
+import java.util.Scanner;
+
+public class CaeserCipher {
+	
+	public static void main (String [] args) {
+		String firstQuest;
+		String secondQuest;
+		
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.println("This program encrpyts and decrpts messages using the Caeser Cipher.");
+		System.out.print("Would you like to encode or decode a message? ");
+		
+		firstQuest = scan.nextLine();
+		
+		if (firstQuest.equals("encode")){
+			System.out.print("Enter the string to encode: ");	
+			secondQuest = scan.nextLine();
+			if (LowercaseCheck(secondQuest)) {
+				Cipher(secondQuest,true);
+			}
+		}else if (firstQuest.equals("decode")) {
+			System.out.print("Enter the string to decode: ");
+			secondQuest = scan.nextLine();
+			if (LowercaseCheck(secondQuest)) {
+				Cipher(secondQuest,false);
+			}
+		}else {
+			System.out.println("Valid options are \"encode\" or \"decode\"");
+		}
+		scan.close();
+	}
+	
+	
+	
+	public static void Cipher(String message, boolean QuestBoolean) {
+		char[] changedArray = new char[message.length()];
+		for(int i = 0; i < 26 ; i++) {
+			for(int j = 0; j < message.length(); j++) {
+				changedArray[j] = (char) AsciiValue(message, j, i, QuestBoolean);
+			}
+			String str = new String(changedArray);
+			System.out.println("n = "+ i + ": " + str);
+		}
+	}
+	
+	public static int AsciiValue(String message, int stringLen, int key, boolean QuestBool) {
+		if (QuestBool) {
+			return mod((message.charAt(stringLen)+key-'a'), 26)+'a';
+		}else {
+			return mod((message.charAt(stringLen)-key-'a'), 26)+'a';
+		}
+	}
+	
+	public static boolean LowercaseCheck(String message) {
+		for(int i = 0; i< message.length(); i++) {
+			int ascii = message.charAt(i);
+			if ((ascii >= 0 && ascii < 96) || ascii > 123) {
+				System.out.println("The string must consist only of lowercase characters");
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static int mod(int first, int second) {
+		int remainder = first % second;
+		return remainder < 0 ? remainder + second: remainder;
+	}
+}
